@@ -343,7 +343,7 @@ function level_one () {
     )
     playerFace = 0
     init_one()
-    info.startCountdown(3)
+    info.startCountdown(36)
     info.setScore(0)
     scene.setBackgroundColor(9)
     scene.setBackgroundImage(img`
@@ -1314,6 +1314,9 @@ function game_over_lose () {
     info.setScore(totalScore + info.score())
     game.over(false, effects.confetti)
 }
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    MainController()
+})
 function level_one_controll () {
     if (controller.left.isPressed()) {
         animation.runImageAnimation(
@@ -1592,6 +1595,17 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Fish, function (sprite, otherSpr
     info.changeScoreBy(-1)
     info.changeLifeBy(-1)
 })
+function MainController () {
+    if (currentLevel == 1) {
+        level_one_controll()
+    } else if (currentLevel == 2) {
+        level_two_controll()
+    } else if (currentLevel == 3) {
+        level_three_controll()
+    } else {
+    	
+    }
+}
 function level_one_hydro () {
     if (playerFace == 0) {
         water = sprites.create(img`
@@ -2109,6 +2123,9 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Three_Coins, function (sprite, o
     otherSprite.destroy()
     info.changeScoreBy(1)
 })
+controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+    MainController()
+})
 info.onCountdownEnd(function () {
     if (currentLevel == 1) {
         end1()
@@ -2360,6 +2377,9 @@ function level_three_controll () {
         getPlayer.ay = 300
     }
 }
+controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+    MainController()
+})
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if (currentLevel == 1) {
         controller.moveSprite(getPlayer, 0, 0)
@@ -2393,6 +2413,9 @@ function level_two_win () {
         value.destroy()
     }
 }
+controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
+    MainController()
+})
 info.onLifeZero(function () {
     game_over_lose()
 })
@@ -2645,6 +2668,9 @@ function newLevel () {
         game_over_win()
     }
 }
+controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+    MainController()
+})
 function game_over_win () {
     info.setScore(totalScore)
     game.over(true, effects.confetti)
@@ -2867,18 +2893,63 @@ let playerFace = 0
 let getPlayer: Sprite = null
 let totalScore = 0
 let currentLevel = 0
-currentLevel = 3
+currentLevel = 1
 totalScore = 0
 newLevel()
 game.onUpdate(function () {
-    if (currentLevel == 1) {
-        level_one_controll()
+    if (currentLevel == 3) {
+        getPlayer.ay = 300
     } else if (currentLevel == 2) {
-        level_two_controll()
-    } else if (currentLevel == 3) {
-        level_three_controll()
-    } else {
-    	
+        if (!(controller.left.isPressed() || controller.right.isPressed())) {
+            animation.runImageAnimation(
+            getPlayer,
+            [img`
+                ...dd...1.......
+                ...66.bbb.......
+                ..6b6dfdfd1.....
+                ..6b6ddddd6.....
+                ..66b666966.....
+                ...6fbfff6f.....
+                ...66fffff66....
+                ....6fffff96....
+                ....6fffff96....
+                .1..6fffff66....
+                ....6fffff6....1
+                ....6fffffdd....
+                ....f66866dcc...
+                .....66c66cccc..
+                .....66cc6cccc..
+                .....66686.cc...
+                .....166c4......
+                .....64624......
+                .....44424......
+                .....444........
+                `,img`
+                ..dd............
+                ..66..bbb.......
+                ..6b6dfdfd6.....
+                ..6b6ddddd6.....
+                ..66b666961.....
+                ...6fbfff6f.....
+                ...66fffff66....
+                ....6fffff96....
+                ....6fffff96....
+                ....6fffff966...
+                ....6fffff966...
+                ....6fffff6dd.1.
+                ..1.f66866fdcc..
+                .....66c66.cccc.
+                .....6cc66.cccc.
+                .....68666..cc..
+                .....4c666......
+                .....42646......
+                .....41444......
+                .......444......
+                `],
+            1000,
+            true
+            )
+        }
     }
 })
 game.onUpdateInterval(1700, function () {
